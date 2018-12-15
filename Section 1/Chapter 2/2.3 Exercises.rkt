@@ -1,0 +1,118 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname |2.3 Exercises|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(require 2htdp/batch-io)
+#|
+
+(define (letter fst lst signature-name)
+  (string-append
+   (opening fst)
+   "\n\n"
+   (body fst lst)
+   "\n\n"
+   (closing signature-name)))
+
+(define (opening fst)
+  (string-append "Dear " fst ","))
+
+(define (body fst lst)
+  (string-append
+   "We have discovered that all people with the" "\n"
+   "last name " lst " have won our lottery. So, " "\n"
+   fst ", " "hurry and pick up your prize."))
+
+(define (closing signature-name)
+  (string-append
+   "Sincerely,"
+   "\n\n"
+   signature-name
+   "\n"))
+
+(letter "Matthew" "Fisler" "Felleisen")
+(letter "Kathi" "Felleisen" "Findler")
+
+|#
+#|
+
+;The Theatre! Exercise 27
+;This is the base attendance when the show is 5 dollars per person
+(define base-attendance 120)
+;This is the price that produces a relative attendance of 120
+(define base-price 5)
+;This is the amount of attendees lost
+;or gained for every 10-cent increase in price
+(define base-attendance-variance 15)
+;This is the increase in cost that produces a base-attendance-variance increase
+;or decrease. An increase of base-cost-variance produces a decrease by the
+;amount of base-attendance variance.
+(define base-cost-variance .1)
+;This is the fixed cost of a show
+(define show-fixed-cost 180)
+;This is the cost incurred per attendee of the show
+(define cost-of-attendee .04)
+
+(define (attendees ticket-price)
+  (- base-attendance (* (- ticket-price base-price)
+                        (/ base-attendance-variance base-cost-variance))))
+
+(define (revenue ticket-price)
+  (* ticket-price (attendees ticket-price)))
+
+(define (cost ticket-price)
+  (+ show-fixed-cost (* cost-of-attendee (attendees ticket-price))))
+
+(define (profit ticket-price)
+  (- (revenue ticket-price)
+     (cost ticket-price)))
+
+|#
+;Exercise 28
+#|Round One
+(profit 1)
+(profit 3)
+(profit 5)
+Round Two
+(profit 1)
+(profit 2)
+(profit 3)
+Round Three
+(profit 2)
+(profit 3)
+(profit 4)
+Round Four
+(profit 2.5)
+(profit 3)
+(profit 3.5)
+Round 5
+(profit 2.5)
+(profit 2.75)
+(profit 3)
+Round 6
+(profit 2.8)
+(profit 3)
+(profit 3.2)
+Round 7
+(profit 2.8) 1062
+(profit 2.9) 1064.1
+(profit 3) 1063.2
+
+Answer: (profit 2.9) 1064.1
+|#
+
+(define (profit price)
+  (- (* (+ 120
+           (* (/ 15 0.1)
+              (- 5.0 price)))
+        price)
+     (+ 180
+        (* 0.04
+           (+ 120
+              (* (/ 15 0.1)
+                 (- 5.0 price)))))))
+
+(profit 1)
+(profit 2)
+(profit 3)
+(profit 4)
+(profit 5)
+
