@@ -20,13 +20,10 @@
 (define show-fixed-cost 180)
 ;This is the cost incurred per attendee of the show
 (define cost-of-attendee 1.5)
-;Apparently the relationship between base-attendance-variance and
-;Exercise 30, 2.4
-;base-cost-variance is called price sensitivity. It's a constant too. Here it is:
-(define price-sensitivity (/ base-attendance-variance base-cost-variance))
 
 (define (attendees ticket-price)
-  (- base-attendance (* (- ticket-price base-price) price-sensitivity)))
+  (- base-attendance (* (- ticket-price base-price)
+                        (/ base-attendance-variance base-cost-variance))))
 
 (define (revenue ticket-price)
   (* ticket-price (attendees ticket-price)))
