@@ -1,0 +1,78 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-beginner-reader.ss" "lang")((modname |3.6 guts|) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
+(require 2htdp/image)
+(require 2htdp/universe)
+
+;Physical Constants
+(define WHEEL-RADIUS 5)
+(define WIDTH-OF-WORLD (* WHEEL-RADIUS 40))
+(define WHEEL-DISTANCE (* WHEEL-RADIUS 5))
+(define HEIGHT-OF-WORLD (* WHEEL-RADIUS 40))
+
+
+;Image Constants
+(define WHEEL
+  (circle WHEEL-RADIUS "solid" "black"))
+(define SPACE
+  (rectangle WHEEL-DISTANCE WHEEL-RADIUS "outline" "white"))
+(define BOTH-WHEELS
+  (beside WHEEL SPACE WHEEL))
+(define CAR-BODY
+  (above
+   (rectangle WHEEL-DISTANCE (* WHEEL-RADIUS 2) "solid" "blue")
+   (rectangle (* WHEEL-DISTANCE 2) (* WHEEL-RADIUS 2) "solid" "blue"))
+  )
+(define CAR
+  (above CAR-BODY BOTH-WHEELS))
+(define CAR-RIGHT (+ ws (/ (image-width CAR) 2)))
+;The scene the car will be placed in. A rectangle.
+(define BACKGROUND
+  (empty-scene HEIGHT-OF-WORLD WIDTH-OF-WORLD))
+(check-expect (image-height BACKGROUND) HEIGHT-OF-WORLD)
+(check-expect (image-width BACKGROUND) WIDTH-OF-WORLD)
+;A tree in the scene
+(define TRUNK-HEIGHT 20)
+(define TRUNK-WIDTH 2)
+(define TREE
+  (underlay/xy (circle 10 "solid" "green")
+               9 15
+               (rectangle TRUNK-WIDTH TRUNK-HEIGHT "solid" "brown")))
+;New scene with tree
+(define TREE-BACKGROUND
+  (place-image TREE (/ WIDTH-OF-WORLD 2)
+  (- HEIGHT-OF-WORLD TRUNK-HEIGHT) (empty-scene HEIGHT-OF-WORLD WIDTH-OF-WORLD)))
+;The Y-Axis of the car inside of the place-image function
+(define Y-CAR (- HEIGHT-OF-WORLD (/ (image-height CAR) 2)))
+
+
+
+;Functions
+ 
+; WorldState -> WorldState
+; moves the car by x, 3 in this case, by 3 for every clock tick
+;examples
+; given: 6, expect: 9
+(check-expect (tock 6) 9)
+(check-expect (tock 8) 11)
+; given: 8, expect: 11
+(define (tock ws)
+  (+ ws 3))
+(define (tock-test ws)
+  (+ ws 0))
+
+;Class Definition: We represent the state of the world as a set of graphics
+;Function Signature: WorldState -> Image
+;Purpose Statement: Take the Worldstate, a number representing an x cooridnate,
+;and plot the car onto a background
+;Header
+(define (render ws)
+   (place-image CAR ws Y-CAR TREE-BACKGROUND))
+
+
+; launches the program from some initial state 
+(define (main ws)
+   (big-bang ws
+     [on-tick tock-test]
+     [to-draw render]))
+
