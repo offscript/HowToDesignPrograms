@@ -29,19 +29,16 @@
 ;WorldState -> Image
 ;Shows the status of the UFO in the scene
 ;test
-(check-expect (showText 10)
-              (place-image (text "descending" 11 "green")
-                           10 10
-                           (render 10)))
+(check-expect (showText 10) (text "descending" 11 "green"))
 
-(define (showText ws)
+(define (showText y)
   (cond
     [(<= 0 y CLOSE)
-     (place-image (text "descending" 11 "green"))]
+     (text "descending" 11 "green")]
     [(and (< CLOSE y) (<= y HEIGHT))
-     (place-image (text "closing in" 11 "orange"))]
+     (text "closing in" 11 "orange")]
     [(> y HEIGHT)
-     (place-image (text "landed" 11 "red"))]))
+     (text "landed" 11 "red")]))
 ; WorldState -> Image
 ; places UFO at given height into the center of MTSCN
 ;(check-expect (render 11) (place-image UFO CENTER 11 MTSCN))
@@ -50,4 +47,6 @@
    (place-image UFO CENTER y MTSCN)))
 
 ; WorldState -> String
-; tells the user via ??? whether or not the 
+; tells the user via ??? whether or not the
+
+(render 50)
