@@ -14,7 +14,8 @@
 (check-expect (distance-to-0 (make-posn 6 (* 2 4))) 10)
 (check-expect (+ (distance-to-0 (make-posn 12 5)) 10) 23)
 
-;computs the total distance from a posn to the origin as a function of x + y
+;Function Signature: posn -> Number
+;Purpose Statement: computes the total distance from a posn to the origin as a function of x + y
 (define (manhattan-distance ap)
   (+ (posn-x ap) (posn-y ap)))
 
